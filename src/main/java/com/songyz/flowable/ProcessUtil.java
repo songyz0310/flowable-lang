@@ -1,4 +1,4 @@
-package com.songyz.toolkits.flowable.util;
+package com.songyz.flowable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,11 +28,12 @@ import org.flowable.bpmn.model.SequenceFlow;
 import org.flowable.bpmn.model.StartEvent;
 import org.flowable.bpmn.model.UserTask;
 
-import com.songyz.toolkits.flowable.common.BpmnStep;
-import com.songyz.toolkits.flowable.common.FlowableStencil;
-import com.songyz.toolkits.flowable.enums.WorkflowConst.FlowStepExt;
-import com.songyz.toolkits.utils.JSONHelper;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.songyz.flowable.common.BpmnStep;
+import com.songyz.flowable.common.FlowableStencil;
+import com.songyz.flowable.enums.WorkflowConst.FlowStepExt;
 
 /**
  * 流程工具类
@@ -44,12 +45,29 @@ public class ProcessUtil {
 
     public static final String KEY_PREFIX = "key";
     public static final String BPMN_SUFFIXES = ".bpmn";
+    public static final String USER_TASK = "UserTask";
+    public static final String END_EVENT = "EndEvent";
 
     private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
     private static final BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+    private static final ObjectMapper objMapper = new ObjectMapper();
     private static final int HIG = 100;// 从一个节点分支出来的节点的最大值
-    public static final String USER_TASK = "UserTask";
-    public static final String END_EVENT = "EndEvent";
+
+    static {
+        objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        objMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objMapper.configure(SerializationFeature.WRITE_ENUMS_USING_INDEX, true);
+    }
+
+    private static String toJSON(Object obj) {
+        try {
+            return objMapper.writeValueAsString(obj);
+        }
+        catch (Exception exp) {
+            throw new RuntimeException("toJSON 异常", exp);
+        }
+    }
 
     public static String generateKey() {
         return KEY_PREFIX + UUID.randomUUID().toString();
@@ -180,7 +198,7 @@ public class ProcessUtil {
             attribute.setName(FlowStepExt.NEXT_STEPS);
             attribute.setNamespace(FlowableStencil.NAMESPACE);
             attribute.setNamespacePrefix(FlowableStencil.NAMESPACE_PREFIX);
-            attribute.setValue(JSONHelper.toJSON(nextStepList));
+            attribute.setValue(toJSON(nextStepList));
             userTask.addAttribute(attribute);
         });
 

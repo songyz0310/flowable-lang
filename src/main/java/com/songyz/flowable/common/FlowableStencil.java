@@ -1,9 +1,9 @@
-package com.songyz.toolkits.flowable.common;
+package com.songyz.flowable.common;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.songyz.toolkits.flowable.enums.WorkflowConst.FlowStepExt;
+import com.songyz.flowable.enums.WorkflowConst.FlowStepExt;
 
 /**
  * 流程定义扩展属性

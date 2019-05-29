@@ -1,8 +1,8 @@
-package com.songyz.toolkits.flowable.common;
+package com.songyz.flowable.common;
 
 import java.util.Objects;
 
-import com.songyz.toolkits.flowable.util.ProcessUtil;
+import com.songyz.flowable.ProcessUtil;
 
 public class BpmnStep {
     private String stepKey;
