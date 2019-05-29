@@ -28,12 +28,6 @@
 		<flowable.version>6.4.0</flowable.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- 流程引擎 -->
 		<dependency>
 			<groupId>org.flowable</groupId>
@@ -119,20 +113,18 @@
 				</plugins>
 			</build>
 			<distributionManagement>
-				<repository>
-					<id>release</id>
-					<url>https://dev.1stcs.cn/nexus/repository/hs-releases/</url>
-				</repository>
 				<snapshotRepository>
-					<id>snapshot</id>
-					<url>https://dev.1stcs.cn/nexus/repository/hs-snapshots/</url>
+					<id>sonatype-nexus-snapshots</id>
+					<name>Sonatype Nexus Snapshots</name>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 				</snapshotRepository>
+				<repository>
+					<id>sonatype-nexus-staging</id>
+					<name>Nexus 
+				Release Repository</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
 			</distributionManagement>
-			<!-- <distributionManagement> <snapshotRepository> <id>sonatype-nexus-snapshots</id> 
-				<name>Sonatype Nexus Snapshots</name> <url>https://oss.sonatype.org/content/repositories/snapshots/</url> 
-				</snapshotRepository> <repository> <id>sonatype-nexus-staging</id> <name>Nexus 
-				Release Repository</name> <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> 
-				</repository> </distributionManagement> -->
 		</profile>
 	</profiles>
 </project>
