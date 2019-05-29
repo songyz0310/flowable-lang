@@ -4,16 +4,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.songyz0310</groupId>
 	<artifactId>flowable-lang</artifactId>
-	<version>0.0.10</version>
+	<version>0.0.14</version>
 	<packaging>jar</packaging>
 	<name>flowable-lang</name>
 	<url>http://maven.apache.org</url>
+	<description>
+		flowable lang
+	</description>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+	<scm>
+		<!-- #git项目地址可以用SSH 也可以用 HTTPS的 -->
+		<connection>scm:git:https://github.com/songyz0310/commons-lang.git</connection>
+		<developerConnection>scm:git:https://github.com/songyz0310/commons-lang.git</developerConnection>
+		<url>git:https://github.com/songyz0310/commons-lang.git</url>
+	</scm>
 	<developers>
 		<developer>
 			<name>songyz</name>
@@ -72,6 +81,28 @@
 								<phase>package</phase>
 								<goals>
 									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<configuration>
+							<show>private</show>
+							<nohelp>true</nohelp>
+							<charset>UTF-8</charset>
+							<encoding>UTF-8</encoding>
+							<docencoding>UTF-8</docencoding>
+							<additionalparam>-Xdoclint:none</additionalparam>  <!-- TODO 临时解决不规范的javadoc生成报错,后面要规范化后把这行去掉 -->
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
 								</goals>
 							</execution>
 						</executions>
