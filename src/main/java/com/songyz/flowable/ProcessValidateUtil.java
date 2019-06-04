@@ -39,6 +39,7 @@ import com.songyz.flowable.validator.i1stcs.ManualGatewayValidator;
 import com.songyz.flowable.validator.i1stcs.NecessaryNodeParamValidator;
 import com.songyz.flowable.validator.i1stcs.NecessaryNodeValidator;
 import com.songyz.flowable.validator.i1stcs.NodeAssociationValidator;
+import com.songyz.flowable.validator.i1stcs.SequenceValidator;
 
 /**
  * 流程定义校验工具类
@@ -92,6 +93,7 @@ public class ProcessValidateUtil {
         validatorSet.addValidator(new NecessaryNodeParamValidator());
         validatorSet.addValidator(new NodeAssociationValidator());
         validatorSet.addValidator(new ManualGatewayValidator());
+        validatorSet.addValidator(new SequenceValidator());
 
         processValidatorImpl.addValidatorSet(validatorSet);
         return processValidatorImpl;

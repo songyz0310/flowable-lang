@@ -121,6 +121,7 @@ public enum ErrorDesc {
     SEQ_FLOW_INVALID_SRC(8001_001), // 序列流的源无效
     SEQ_FLOW_INVALID_TARGET(8001_002), // 序列流的目标无效
     SEQ_FLOW_INVALID_TARGET_SOURCE(8001_003), // 序列流的目标无效，未在与源相同的范围内定义该目标
+    SEQ_FLOW_DUPLICATE(8001_004), // 序列流的目标无效
 
     // 9001xxx 流程信号校验
     SIGNAL_EVENT_MISSING_SIGNAL_REF(9001_001), // SignalEventDefinition没有强制属性“SignalRef”

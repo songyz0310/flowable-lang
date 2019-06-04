@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.songyz0310</groupId>
 	<artifactId>flowable-lang</artifactId>
-	<version>0.0.14</version>
+	<version>0.0.15</version>
 	<packaging>jar</packaging>
 	<name>flowable-lang</name>
 	<url>http://maven.apache.org</url>
