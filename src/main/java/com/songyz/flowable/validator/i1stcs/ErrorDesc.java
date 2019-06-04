@@ -6,7 +6,7 @@ package com.songyz.flowable.validator.i1stcs;
 import java.util.Locale;
 
 import com.songyz.flowable.common.ThreadContext;
-import com.songyz.flowable.common.WorkflowI18n;
+import com.songyz.flowable.common.FlowableI18n;
 
 /**
  * 
@@ -161,16 +161,16 @@ public enum ErrorDesc {
     }
 
     public String getI18n() {
-        return WorkflowI18n.getInstance().getMessage(ThreadContext.getLanguage().getLocale(),
-                WorkflowI18n.VALIDATE_DESCRIPTION_PREFIX + code);
+        return FlowableI18n.getInstance().getMessage(ThreadContext.getLanguage().getLocale(),
+                FlowableI18n.VALIDATE_DESCRIPTION_PREFIX + code);
     }
 
     public String getI18n(Object... args) {
-        return WorkflowI18n.getInstance().getMessage(ThreadContext.getLanguage().getLocale(),
-                WorkflowI18n.VALIDATE_DESCRIPTION_PREFIX + code, args);
+        return FlowableI18n.getInstance().getMessage(ThreadContext.getLanguage().getLocale(),
+                FlowableI18n.VALIDATE_DESCRIPTION_PREFIX + code, args);
     }
 
     public String getI18n(Locale lang, Object... args) {
-        return WorkflowI18n.getInstance().getMessage(lang, WorkflowI18n.VALIDATE_DESCRIPTION_PREFIX + code, args);
+        return FlowableI18n.getInstance().getMessage(lang, FlowableI18n.VALIDATE_DESCRIPTION_PREFIX + code, args);
     }
 }

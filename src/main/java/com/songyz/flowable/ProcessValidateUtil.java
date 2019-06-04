@@ -8,7 +8,6 @@ import org.flowable.validation.ProcessValidator;
 import org.flowable.validation.ProcessValidatorImpl;
 import org.flowable.validation.ValidationError;
 import org.flowable.validation.validator.ValidatorSet;
-import org.flowable.validation.validator.ValidatorSetNames;
 
 import com.songyz.flowable.validator.bpmn.AssociationValidator;
 import com.songyz.flowable.validator.bpmn.BoundaryEventValidator;
@@ -49,16 +48,19 @@ import com.songyz.flowable.validator.i1stcs.SequenceValidator;
  */
 public class ProcessValidateUtil {
 
-    private static final ProcessValidator processValidator = initI18nProcessValidator();
+    private static final ProcessValidator bpmnValidator = initBpmnProcessValidator();
+    private static final ProcessValidator i1stcsValidator = initI1stcsProcessValidator();
 
-    public static List<ValidationError> validateProcess(String bpmnXml) throws XMLStreamException {
-        return processValidator.validate(ProcessUtil.convertToBpmnModelByXml(bpmnXml));
+    public static List<ValidationError> validateBpmnProcess(String bpmnXml) throws XMLStreamException {
+        return bpmnValidator.validate(ProcessUtil.convertToBpmnModelByXml(bpmnXml));
     }
 
-    private static ProcessValidator initI18nProcessValidator() {
-        ProcessValidatorImpl processValidatorImpl = new ProcessValidatorImpl();
+    public static List<ValidationError> validateI1stcsProcess(String bpmnXml) throws XMLStreamException {
+        return i1stcsValidator.validate(ProcessUtil.convertToBpmnModelByXml(bpmnXml));
+    }
 
-        ValidatorSet validatorSet = new ValidatorSet(ValidatorSetNames.FLOWABLE_EXECUTABLE_PROCESS);
+    private static ValidatorSet getBpmnValidatorSet() {
+        ValidatorSet validatorSet = new ValidatorSet("bpmn");
         validatorSet.addValidator(new AssociationValidator());
         validatorSet.addValidator(new SignalValidator());
         validatorSet.addValidator(new OperationValidator());
@@ -89,13 +91,31 @@ public class ProcessValidateUtil {
 
         validatorSet.addValidator(new DiagramInterchangeInfoValidator());
 
+        return validatorSet;
+    }
+
+    private static ValidatorSet getI1stcsValidatorSet() {
+        ValidatorSet validatorSet = new ValidatorSet("11stcs");
         validatorSet.addValidator(new NecessaryNodeValidator());
         validatorSet.addValidator(new NecessaryNodeParamValidator());
         validatorSet.addValidator(new NodeAssociationValidator());
         validatorSet.addValidator(new ManualGatewayValidator());
         validatorSet.addValidator(new SequenceValidator());
+        return validatorSet;
+    }
 
-        processValidatorImpl.addValidatorSet(validatorSet);
+    private static ProcessValidator initBpmnProcessValidator() {
+        ProcessValidatorImpl processValidatorImpl = new ProcessValidatorImpl();
+
+        processValidatorImpl.addValidatorSet(getBpmnValidatorSet());
+        return processValidatorImpl;
+    }
+
+    private static ProcessValidator initI1stcsProcessValidator() {
+        ProcessValidatorImpl processValidatorImpl = new ProcessValidatorImpl();
+
+        processValidatorImpl.addValidatorSet(getBpmnValidatorSet());
+        processValidatorImpl.addValidatorSet(getI1stcsValidatorSet());
         return processValidatorImpl;
     }
 

@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
  * @author songyz<br>
  * @createTime 2019-01-07 03:35:14
  */
-public class WorkflowI18n {
+public class FlowableI18n {
 
     private static final Object[] empty = new Object[] {};
     private static final String baseName = "com.songyz.flowable.i18n.message";
@@ -20,12 +20,12 @@ public class WorkflowI18n {
     public static final String VALIDATE_PROBLEM_PREFIX = "validate.problem.";// 流程校验异常名称
     public static final String VALIDATE_DESCRIPTION_PREFIX = "validate.description.";// 流程校验异常描述
 
-    private static WorkflowI18n self = new WorkflowI18n();
+    private static FlowableI18n self = new FlowableI18n();
 
-    private WorkflowI18n() {
+    private FlowableI18n() {
     }
 
-    public static WorkflowI18n getInstance() {
+    public static FlowableI18n getInstance() {
         return self;
     }
 

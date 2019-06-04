@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.songyz.flowable.common.BpmnStep;
 import com.songyz.flowable.common.FlowableStencil;
-import com.songyz.flowable.enums.WorkflowConst.FlowStepExt;
 
 /**
  * 流程工具类
@@ -195,7 +194,7 @@ public class ProcessUtil {
                     .collect(Collectors.toList());
 
             ExtensionAttribute attribute = new ExtensionAttribute();
-            attribute.setName(FlowStepExt.NEXT_STEPS);
+            attribute.setName(FlowableStencil.NEXT_STEPS);
             attribute.setNamespace(FlowableStencil.NAMESPACE);
             attribute.setNamespacePrefix(FlowableStencil.NAMESPACE_PREFIX);
             attribute.setValue(toJSON(nextStepList));
