@@ -30,7 +30,11 @@ public class GetSortedNodeCmd<T extends FlowNode> implements Command<List<T>> {
     @Override
     public List<T> execute(CommandContext commandContext) {
         Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
-        return ProcessUtil.sort(ProcessUtil.initNextTask(process), type);
+
+        ProcessUtil.initNextTask(process);
+        ProcessUtil.initNextGateway(process);
+
+        return ProcessUtil.sort(process, type);
     }
 
 }

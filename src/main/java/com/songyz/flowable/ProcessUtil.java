@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
@@ -31,6 +32,8 @@ import org.flowable.bpmn.model.UserTask;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.songyz.flowable.common.BpmnGateway;
+import com.songyz.flowable.common.BpmnGateway.GatewayCondition;
 import com.songyz.flowable.common.BpmnStep;
 import com.songyz.flowable.common.FlowableStencil;
 
@@ -187,18 +190,21 @@ public class ProcessUtil {
                 }
             });
 
-            // 将结束类型排到任务类型后边
-            // 任务类型再使用名称排序
-            List<BpmnStep> nextStepList = nextStepSet.stream()
-                    .sorted(Comparator.comparing(BpmnStep::getType).reversed().thenComparing(BpmnStep::getStepName))
-                    .collect(Collectors.toList());
+            if (nextStepSet.size() > 1) {
+                // 将结束类型排到任务类型后边
+                // 任务类型再使用名称排序
+                List<BpmnStep> nextStepList = nextStepSet.stream()
+                        .sorted(Comparator.comparing(BpmnStep::getType).reversed().thenComparing(BpmnStep::getStepName))
+                        .collect(Collectors.toList());
 
-            ExtensionAttribute attribute = new ExtensionAttribute();
-            attribute.setName(FlowableStencil.NEXT_STEPS);
-            attribute.setNamespace(FlowableStencil.NAMESPACE);
-            attribute.setNamespacePrefix(FlowableStencil.NAMESPACE_PREFIX);
-            attribute.setValue(toJSON(nextStepList));
-            userTask.addAttribute(attribute);
+                ExtensionAttribute attribute = new ExtensionAttribute();
+                attribute.setName(FlowableStencil.NEXT_STEPS);
+                attribute.setNamespace(FlowableStencil.NAMESPACE);
+                attribute.setNamespacePrefix(FlowableStencil.NAMESPACE_PREFIX);
+                attribute.setValue(toJSON(nextStepList));
+                userTask.addAttribute(attribute);
+            }
+
         });
 
         return process;
@@ -226,6 +232,51 @@ public class ProcessUtil {
         });
 
         return nextNodes;
+    }
+
+    public static void initNextGateway(Process process) {
+        process.findFlowElementsOfType(UserTask.class, false).forEach(userTask -> {
+
+            SequenceFlow sequenceFlow = userTask.getOutgoingFlows().get(0);
+            FlowElement targetElement = sequenceFlow.getTargetFlowElement();
+
+            // 网关
+            if (ExclusiveGateway.class.isInstance(targetElement)) {
+                ExclusiveGateway exclusiveGateway = ExclusiveGateway.class.cast(targetElement);
+
+                // 是否为自定义网关
+                if (StringUtils.isNotEmpty(exclusiveGateway.getDocumentation())
+                        && exclusiveGateway.getDocumentation().startsWith("i1stcs_")) {
+                    BpmnGateway bpmnGateway = new BpmnGateway();
+
+                    bpmnGateway.setKey(exclusiveGateway.getDocumentation());
+
+                    if (StringUtils.isNotEmpty(sequenceFlow.getName())) {
+                        bpmnGateway.setName(sequenceFlow.getName());
+                    }
+
+                    if (StringUtils.isNotEmpty(exclusiveGateway.getName())) {
+                        bpmnGateway.setName(targetElement.getName());
+                    }
+
+                    List<GatewayCondition> conditions = exclusiveGateway.getOutgoingFlows().stream().map(out -> {
+                        GatewayCondition condition = new BpmnGateway.GatewayCondition();
+                        condition.setName(out.getName());
+                        condition.setValue(out.getDocumentation());
+                        return condition;
+                    }).sorted(Comparator.comparing(GatewayCondition::getName)).collect(Collectors.toList());
+
+                    bpmnGateway.setConditions(conditions);
+
+                    ExtensionAttribute attribute = new ExtensionAttribute();
+                    attribute.setName(FlowableStencil.NEXT_GATEWAY);
+                    attribute.setNamespace(FlowableStencil.NAMESPACE);
+                    attribute.setNamespacePrefix(FlowableStencil.NAMESPACE_PREFIX);
+                    attribute.setValue(toJSON(bpmnGateway));
+                    userTask.addAttribute(attribute);
+                }
+            }
+        });
     }
 
 }
